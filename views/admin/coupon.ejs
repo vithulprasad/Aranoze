@@ -1,0 +1,67 @@
+
+<div class="col-12">
+    <div class="text-center mt-5">
+        <h2 style="color: black;" id="coupon">COUPON MANAGEMENT</h2>
+    </div>
+
+    <div class="bg-light rounded h-100 p-4 mt-0">
+        <div class="d-flex justify-content-end my-3">
+            <a href="/admin/addcoupon"><button class="btn btn-success">Add New Coupon</button></a>
+        </div>
+        <div class="table-responsive">
+            <table class="table  table-hover">
+                <thead class="align-middle">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Discount Value</th>
+                        <th scope="col">Minimum Purchase</th>
+                        <th scope="col">Maximum Discount</th>
+                        <th scope="col">Limit</th>
+                        <th scope="col">Expire Date</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Actions</th>
+                        <th scope="col">Delete</th>
+
+
+
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                  <% getcoupon.forEach(coupon => { %>
+                    <tr>
+
+                        <td><%=coupon.couponName %></td>
+                        <td><%=coupon.couponCode%></td>
+                        <td><%=coupon.discountValue%>%</td>
+                        <td><%=coupon.minPurchase%></td>
+                        <td><%=coupon.maxDiscount%></td>
+                        <td><%=coupon.limit%></td>
+                        <td><%=coupon.expireDate.toLocaleDateString()%></td>
+                        
+                        <td><a href="/admin/editcoupon/?id=<%=coupon._id%>"><button class="btn btn-primary"> <i class="bi bi-pencil-square"><Em></Em></i></button></a></td>
+                        <% if (coupon.status) { %>
+                        <td><a href="/admin/deactivate/?id=<%=coupon._id %>"><button class="btn btn-success">Activate</button></a>
+                        <td><a href="/admin/deletecoupon/?id=<%=coupon._id%>"><button class="btn btn-danger"><i class="bi bi-x-circle-fill"></i></button></a>
+
+                        </td>
+                        <% } else { %>
+                        <td><a href="/admin/activate/?id=<%=coupon._id %>"><button class="btn btn-danger">Dactivate</button></a>
+                        <td><a href="/admin/deletecoupon/?id=<%=coupon._id %>"><button class="btn btn-danger"><i class="bi bi-x-circle-fill"></i></button></a>
+                        </td>
+                        <% } %>
+
+                        
+
+
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  <script>
+        var mylink=document.getElementById("coupon")
+        mylink.classList.add("active")
+      </script>

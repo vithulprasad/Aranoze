@@ -1,0 +1,300 @@
+<style>
+  .slideshow-items {
+    width: 600px;
+    display: none;
+  }
+
+  .slideshow-items.active {
+    display: block;
+  }
+
+  
+
+  .slideshow-thumbnails.active {
+    opacity: 1;
+  }
+
+  #slideshow-items-container {
+    display: inline-block;
+    position: relative;
+  }
+
+  #lens,
+  #result {
+    position: absolute;
+    display: none;
+    z-index: 1;
+    border: solid var(--light-grey-2) 1px;
+    background-color: rgba(233, 233, 233, 0.4);
+  }
+
+  .checked {
+    color: orange;
+  }
+  .product_image_area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .product_image_area .left-side {
+    flex: 1;
+  }
+
+  .product_image_area .right-side {
+    flex: 1;
+  }
+
+  .product_image_area .right-side .s_product_text {
+    margin-left: 30px; /* Add spacing between image and content */
+  }
+</style>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="container mt-5">
+  <div class="row s_product_inner justify-content-between p-5">
+    <!-- Left Side: Image -->
+    <div class="col-lg-6 col-xl-6">
+      <div class="product_image_area section_padding mt-5">
+        <div id='lens'></div>
+        <div id='result'></div>
+        <div id='slideshow-items-container'>
+          <!-- Display the larger image above the thumbnails -->
+          <% product.image.forEach((element, i) => { %>
+          <% if (i === 0) { %>
+          <img class='slideshow-items active' src="/admin/img/<%= element %>"
+            alt="productImage">
+          <% } else { %>
+          <img class="slideshow-items" src="/admin/img/<%= element %>" alt="productImage">
+          <% } %>
+          <% }) %>
+          <!-- Display the small thumbnail images below the main large image -->
+          <div class='row mt-3'>
+            <div class="col-2">
+              <img style="width: 300px;"  class='slideshow-thumbnails active ' src="/admin/img/<%= product.image[0] %>"
+                alt="productImage">
+            </div>
+            <% product.image.forEach((element, i) => { %>
+            <% if (i > 0) { %>
+            <div class="col-2">
+              <img style="width: 300px;" class="slideshow-thumbnails  " src="/admin/img/<%= element %>"
+                alt="productImage">
+            </div>
+            <% } %>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+      <!-- Right Side: Product Details -->
+      <div class="col-lg-6 col-xl-6">
+        <div class="s_product_text mt-5">
+          <h4>
+            <div style="color: rgb(34, 41, 43);">Product Name:</div>
+            <%= product.name %>
+          </h4>
+          <h2>Price: <%= product.price %></h2>
+          <ul class="list">
+            <li>
+              <a class="active" href="#">
+                <span>Category</span>
+                <%= product.category %>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span>Availability</span>
+                <%= product.stock %>
+              </a>
+            </li>
+          </ul>
+          <p><%= product.description %></p>
+          <% let totalRating=0; %>
+
+          <!-- Loop through the product reviews to display star icons and calculate total rating -->
+          <% product.review.forEach(review=> { %>
+            <div>
+
+            </div>
+
+            <% totalRating +=review.rating; %>
+              <% }); %>
+
+                <!-- Calculate the average rating and display it -->
+                <% const averageRating=totalRating / product.review.length; %>
+                  <h5 style="margin-bottom: 8px;">Average Rating: <%= averageRating.toFixed(1) %>
+                  </h5>
+
+                  <div>
+                    <!-- Display stars for average rating -->
+                    <% for (let i=0; i < 5; i++) { %>
+                      <% let checked=i < averageRating ? 'checked' : '' ; %>
+                        <span class="fa fa-star <%= checked %>"></span>
+                        <% } %>
+                  </div>
+          <div class="card_area d-flex justify-content-between align-items-center">
+            <!-- <div class="product_count">
+              <span class="inumber-decrement"><i class="ti-minus"></i></span>
+              <input class="input-number" type="text" value="1" min="0" max="10">
+              <span class="number-increment"><i class="ti-plus"></i></span>
+            </div> -->
+            <a onclick="addcart('<%= product._id %>')" class="btn_3">Add to cart</a>
+            <!-- <a href="#" class="like_us"><i class="ti-heart"></i></a> -->
+          </div>
+          <div style="margin-top: 50px;">
+            <%product.review.forEach(product=> {%>
+              <div style="margin-top: 30px;">
+                <h4>
+                  <%=product.user.firstName%>
+                </h4>
+                <div>
+                  <% for (let i=0; i < 5; i++) { %>
+                    <span class="fa fa-star <%= i < product.rating ? 'checked' : '' %>"></span>
+                    <% } %>
+                </div>
+                <div style="margin-top: 10px;">
+                  <h5 style="margin-bottom: 4px;">Product Review:</h5>
+                  <span>
+                    <%= product.review %>
+                  </span>
+                </div>
+              </div>
+              <%}); %>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+  function addcart(productid) {
+    $.ajax({
+      url: '/addtocart?id=' + productid,
+      method: 'GET',
+      success: function (response) {
+
+        if (response.status === true) {
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+
+          Toast.fire({
+            icon: 'success',
+            title: 'Added to Cart'
+          })
+        } else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+
+          Toast.fire({
+            icon: 'error',
+            title: 'You already added this product'
+          })
+
+        }
+      },
+      error: function (xhr, status, error) {
+        // Code to handle the error response
+        console.log(error);
+      }
+    });
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('.slideshow-thumbnails').hover(function () {
+      changeSlide($(this));
+    });
+
+    $(document).mousemove(function (e) {
+      var x = e.clientX;
+      var y = e.clientY;
+
+      var imgx1 = $('.slideshow-items.active').offset().left;
+      var imgx2 = $('.slideshow-items.active').outerWidth() + imgx1;
+      var imgy1 = $('.slideshow-items.active').offset().top;
+      var imgy2 = $('.slideshow-items.active').outerHeight() + imgy1;
+
+      if (x > imgx1 && x < imgx2 && y > imgy1 && y < imgy2) {
+        $('#lens').show();
+        $('#result').show();
+        imageZoom($('.slideshow-items.active'), $('#result'), $('#lens'));
+      } else {
+        $('#lens').hide();
+        $('#result').hide();
+      }
+    });
+  });
+
+  function imageZoom(img, result, lens) {
+    result.width(img.innerWidth());
+    result.height(img.innerHeight());
+    lens.width(img.innerWidth() / 2);
+    lens.height(img.innerHeight() / 2);
+
+    result.offset({ top: img.offset().top, left: img.offset().left + img.outerWidth() + 10 });
+
+    var cx = img.innerWidth() / lens.innerWidth();
+    var cy = img.innerHeight() / lens.innerHeight();
+
+
+
+    result.css('backgroundImage', 'url(' + img.attr('src') + ')');
+    result.css('backgroundSize', img.width() * cx + 'px ' + img.height() * cy + 'px');
+
+    lens.mousemove(function (e) { moveLens(e); });
+    img.mousemove(function (e) { moveLens(e); });
+    lens.on('touchmove', function () { moveLens(); });
+    img.on('touchmove', function () { moveLens(); });
+
+    function moveLens(e) {
+      var x = e.clientX - lens.outerWidth() / 2;
+      var y = e.clientY - lens.outerHeight() / 2;
+      if (x > img.outerWidth() + img.offset().left - lens.outerWidth()) {
+        x = img.outerWidth() + img.offset().left - lens.outerWidth();
+      }
+      if (x < img.offset().left) {
+        x = img.offset().left;
+      }
+      if (y > img.outerHeight() + img.offset().top - lens.outerHeight()) {
+        y = img.outerHeight() + img.offset().top - lens.outerHeight();
+      }
+      if (y < img.offset().top) {
+        y = img.offset().top;
+      }
+      lens.offset({ top: y, left: x });
+      result.css('backgroundPosition', '-' + (x - img.offset().left) * cx + 'px -' + (y - img.offset().top) * cy + 'px');
+    }
+  }
+
+  function changeSlide(elm) {
+    $('.slideshow-items').removeClass('active');
+    $('.slideshow-items').eq(elm.index()).addClass('active');
+    $('.slideshow-thumbnails').removeClass('active');
+    $('.slideshow-thumbnails').eq(elm.index()).addClass('active');
+  }
+</script>

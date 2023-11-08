@@ -1,0 +1,64 @@
+<style>
+    h1 {
+      color: black;
+      text-align: center;
+    }
+  </style>
+
+<div class="col-12">
+    
+        
+    <h1 style="color: black;" class="mb-4">Bannres</h1>
+     <div class="bg-light rounded h-100 p-4">
+       
+        <div class="d-flex justify-content-end my-3">
+            <a href="/admin/addbanner"><button class="btn btn-success">Create A Banner</button></a>
+        </div>
+        <div class="table-responsive">
+            <h3>BANNER MANAGENENT</h3>
+            <table class="table table-hover">
+                <thead class="align-middle">
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Banner Name</th>
+                        <th scope="col">Tittle</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Url</th>
+                        <th scope="col">Delete</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <%Bannerdata.forEach(function(banner){%>
+                        <tr>
+                            <td><img style="width: 90px;"src="/admin/img/<%= banner.image%>"></td>
+                            <td><%=banner.bannername%></td>
+                            <td><%=banner.tittle%></td>
+                            <td><%=banner.description%></td>
+                            <td><%=banner.url%></td>
+                            <td><a href="/admin/deletebanner/?id=<%=banner._id %>"><button class="btn btn-danger"><i class="bi bi-x-circle-fill"></i></button></a></td>
+                            <td><a href="/admin/editbanner/?id=<%=banner._id%>"><button class="btn btn-primary"> <i class="bi bi-pencil-square"><Em></Em></i></button></a></td>
+                             <td><%if(banner.status === true){%>
+                                    <a href="/admin/activebanner/?id=<%=banner._id%>"><button class="btn btn-success">Active</button></a>
+                                    <% }else{ %>
+                                    <a href="/admin/deactivebanner/?id=<%=banner._id%>"><button class="btn btn-danger">Deactive</button></a>
+                                    <% } %>
+                            </td>
+                        </tr>
+
+                    <%})%>
+                    
+
+                </tbody>
+            </table>
+        </div>
+
+     </div>
+
+</div>
+<script>
+    var mylink=document.getElementById("Product")
+    mylink.classList.add("active")
+</script>

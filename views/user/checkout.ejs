@@ -1,0 +1,371 @@
+<style>
+  .inp {
+    background-color: transparent;
+    border: 0px solid;
+    height: 40px;
+    width: 200px;
+  }
+
+  .inp:focus {
+    outline: none;
+  }
+
+  .hidden-button {
+    display: none;
+  }
+</style>
+
+<section class="ftco-section pt-5 mt-5">
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-10 ftco-animate">
+        <h2 class="text-center">Billing Details</h2>
+       
+        <form class="border p-3 " id="myForm">
+
+          <div class="row w-100 p-1">
+            <% user.address.forEach(element => { %>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+              <div class="card" style="margin-right: 8px; background-color: rgb(255, 255, 255);">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between px-2 mb-2">
+                    <a href="/editaddress/?id=<%=element._id %>" style="font-weight: bold;">Edit</a>
+                    <a href="/deleteaddress/?id=<%=element._id %>" style="font-weight: bold;">Delete</a>
+                  </div>
+          
+                  <h5 class="card-title m-0 text-dark"><%= element.name %></h5>
+                  <p class="card-text m-0"><%= element.address %></p>
+                  <p class="card-text m-0"><%= element.city %>, <%= element.state%>, <%= element.country%></p>
+                  <p class="card-text m-0"><%= element.pin%></p>
+                  <p class="card-text">Mob: +91<%= element.mob%></p>
+          
+                  <% if (element.status) { %>
+                  <div class="d-flex pl-2 pt-1">
+                    <a href="" class="center">
+                      <input type="radio" checked="checked" name="addressid" value="<%=element._id%>">
+                      <span class="pl-1" style="font-weight: bold; font-size: 16px;">Deliver to this address</span>
+                    </a>
+                  </div>
+                  <% } else { %>
+                    <div class="d-flex pl-2 pt-1">
+                      <a href="/selectaddress/?id=<%= element._id %>" class="center">
+                        <input id="myRadio" name="ad" type="radio" value="<%= element._id %>">
+                      </a>
+                    </div>
+                    
+                  <% } %>
+                  
+                </div>
+              </div>
+            </div>
+            <% })%>
+          </div>
+          
+          
+            <!-- {{/each}} -->
+          </div>
+
+          <div class="w-100 h-20 p-3">
+            <div class="col-md-12">
+              <a style="background-color: rgb(2, 3, 2);" class="btn btn-primary p-2" href="/addaddress">Add new
+                Address</a>
+            </div>
+
+          </div>
+
+          <div class="row mt-5 pt-3 d-flex">
+            <div class="col-md-6">
+              <div class="card-body"  style="background-color: rgb(240, 227, 227);">
+                <h2 style="font-weight: bold;">CART TOTAL</h2>
+                <div>
+                  <ul class="list-group list-group-flush pt-4" style="background-color:rgb(240, 227, 227);">
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0" style="background-color:rgb(240, 227, 227);">
+                      <h4 style="font-weight: bold; font-size: medium;">SubTotal</h4>
+                      <span id="subtotal"><%=Cart.totprice %></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: rgb(240, 227, 227);">
+                      <h4 style="font-weight: bold; font-size: medium;">Discount</h4> 
+                      <span id="discount">0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color:rgb(240, 227, 227);">
+                      <h4 style="font-weight: bold; font-size: medium;">walletAmount</h4> 
+                      <span><%=user.walletAmount %></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color:rgb(240, 227, 227);">
+                      <h4 style="font-weight: bold; font-size: medium;">Shipping</h4> 
+                      <span>0.00</span>
+                    </li>
+                    <hr style="border: 5px solid black;">
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3"style="background-color: rgb(240, 227, 227);">
+                      <div>
+                        <strong><h3 style="font-weight: 900;">Total Amount</h3></strong>
+                        <strong>
+                          <p class="mb-0">(including GST)</p>
+                        </strong>
+                      </div>
+                      <span id="total_amount">
+                        <!-- <strong><h3 style="font-weight: bold; font-size: large; "> &#x20B9;:< %=Cart.totprice %></h3></strong> -->
+                        <h3 style="font-weight: bold; font-size: 30px ;">&#x20B9;:<input  type="text" readonly id="totprice" value="<%= Cart.totprice %>" 
+                          style="font-weight: bold; font-size: 23px; width: 140px; color: rgb(53, 13, 13); background-color:rgb(224, 194, 194);border: none;"></h3>
+                        
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <input type="radio" checked="checked"id="abcu" name="totprice" value="<%= Cart.totprice %>" hidden>
+            
+            
+            <div class="col-md-6">
+              <div class="cart-detail bg-light p-3 p-md-4">
+                <h3 class="billing-heading mb-4">Payment Method</h3>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <div class="radio">
+                      <label><input type="radio" name="payment" value="COD" class="mr-2" />
+                        Cash On Delivery</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <div class="radio">
+                      <label><input value="Online" type="radio" name="payment" class="mr-2" />
+                        Online</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <div class="radio">
+                      <label><input value="Wallet" type="radio" name="payment" class="mr-2" />
+                        Wallet</label>
+                    </div>
+                  </div>
+                </div>
+
+                 <div class="form-group">
+                  <div class="col-md-12">
+                    <div class="checkbox">
+                      <label><input type="checkbox" value="" class="mr-2"> I have read and accept the terms and
+                        conditions</label>
+                    </div>
+                  </div>
+                </div> 
+              
+              <button class="btn btn-primary"  type='submit'>Place Order</button>
+              <!-- <a href="/placeorder/?total=< %=Cart.totprice %>&paymentmethod=cod"><span>cod</span></a> -->
+              
+                <div class="d-flex justify-content-center mt-2">
+                <span id="wallet-message" class="text-center"
+                      style="font-size: 20px; color: red;font-weight: bold;"></span></span>
+
+                 <% if (noAddress) {%>
+                  <span><i style="font-size: 20px;"
+                      class="bi bi-exclamation-triangle-fill text-warning mr-2"></i><span class="text-center"
+                      style="font-size: 20px; color: red;font-weight: bold;">Please Add Address</span></span>
+                  <% } %> 
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+    
+        <div class="row ">
+          <div class=" col-md-6 col-12 input-group p-4  w-25 p-3" >
+            <input type="text" id="code" class="form-control" placeholder="Coupon Code" />
+            <div class="input-group-append">
+              <button  id="apply-btn" onclick="applyCoupon($('#code').val())" style="background-color: black; color: rgb(254, 254, 254);font-weight:bold; padding:5px;width:100px;">Apply</button>
+            <a href="/removecoupon"><button id="my-button" class="hidden-button" style="background-color: black; color: rgb(255, 0, 0);font-weight:bold; padding: 10px 10px 10px 10px;font-size: 16px;">Remove coupon</button></a>
+
+            </div>
+
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+
+</section>
+
+
+
+
+
+<!-- Add the following line in the head section of your HTML document -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<!-- <script>
+document.getElementById("my-button").addEventListener("click", function () {
+  location.reload();
+});
+</script> -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var radioButtons = document.querySelectorAll('input[type="radio"][name="ad"]');
+  radioButtons.forEach(function (radioBtn) {
+    radioBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+      var url = event.target.parentNode.getAttribute('href');
+      window.location.href = url;
+    });
+  });
+});
+</script>
+<script>
+
+
+  $(document).ready(function() {
+    $('#myForm').submit(function(event) {
+      event.preventDefault(); 
+      // Prevent the default form submission
+      console.log(event.currentTarge,'dfasfsdf -------');
+      var paymentMethod = $('input[name="payment"]:checked').val();
+      var totalAmount = document.getElementById('abcu').value;
+  console.log(totalAmount,'-------dafda------');
+        $.ajax({
+          type: 'post',
+          url: '/placeorder',
+          data: {
+  
+            payment: paymentMethod,
+            totalamount: totalAmount
+          },
+          success:(data)=>{
+            if(data.type=="cod"){
+              window.location.href='/paymentSucess';
+            }else if(data.type=="wal"){
+              window.location.href='/paymentSucess';
+            }else if(data.type=="walError"){
+              swal("Oops!", "wallet do not have amount.", "error");
+            }else{
+
+            }
+
+            if (data.url) {
+            window.location.href='/paymentSucess';
+          } else if(data.lowfund){
+            $('#wallet-message').text("Insufficient amount in wallet")
+            setTimeout(()=>{
+                $('#wallet-message').text("")
+            },5000)
+
+          }
+          else {
+            razorPayment(data)
+          } 
+          }
+        });
+      });
+    });
+  
+    function razorPayment(value) {
+      const order = value.razorpayDetails
+      // razor pay
+      var options = {
+        "key": "rzp_test_QcMvv53AoEYjKO", // Enter the Key ID generated from the Dashboard
+        "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Acme Corp", //your business name
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+        "handler": function (response) {
+          veryfyPayment(response, order)
+        },
+        "prefill": {
+          "name": "Gaurav Kumar", //your customer's name
+          "email": "gaurav.kumar@example.com",
+          "contact": "9000090000"
+        },
+        "notes": {
+          "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+          "color": "#3399cc"
+        }
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+      // razor pay
+    }
+  
+    function veryfyPayment(payment, order) {
+    console.log("enterig in to the sucssesss",payment,order);
+    var totalAmount = document.getElementById('abcu').value;
+      $.ajax({
+        url: "/success",
+        method: "post",
+        data: { order, payment, totalAmount},
+        success: function (response) {
+        console.log(response,'dakkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+        if (response.success==true) {
+          window.location.href = '/paymentSucess'; // Replace '/paymentSuccess' with the desired URL
+
+        }
+          
+        }
+  
+      })
+    }
+  
+  
+  </script>
+
+<script>
+  function applyCoupon(code){
+ 
+const amount=document.getElementById("subtotal").innerHTML
+
+$.ajax({
+  url:'/applycoupon',
+  method:'post',
+  data:{
+    code:code,
+    amount:amount
+  },
+  success:(response)=>{
+    if(response.invalid)
+    {
+      swal("Oops!", "Coupon not found.", "error");
+    }
+    else if(response.expire)
+    {
+      swal("Oops!", "Coupon has expired.", "error");
+    }
+    else if(response.cartamount)
+    {
+      swal("Oops!", "Minimum Amount.", "error");
+    }else if(response.couponokey){
+      console.log(response.distotal,"copen data");
+      
+      console.log("llllllllllllllllllllllllllllllllllllllllllll");
+      swal("Success!", "Coupon Added.", "success");
+
+
+      document.getElementById('total_amount').innerHTML=`${response.distotal}`
+      document.getElementById('abcu').value = response.distotal;
+
+      document.getElementById('discount').innerHTML=`${response.discount}`
+      var myButton=document.getElementById("my-button")
+      myButton.style.display = "block";
+
+      var applyButton = document.getElementById("apply-btn");
+          applyButton.style.display = "none";
+  
+
+          swal("Success!", "Coupon Added.", "success");
+    }
+  }
+})
+  }
+  
+
+
+  </script>
+
+

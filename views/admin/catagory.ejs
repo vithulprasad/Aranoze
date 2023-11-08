@@ -1,0 +1,84 @@
+<section class="container">
+    <div style="background-color:#d1f4f1";class="container">
+<div class="my-10">
+    <h3 style="color: black;" class="text-center margin-top:10px">CATEGORY MANAGENENT</h3>
+</div>
+
+<form action="/admin/addcatagory" method="post" class="row my-2 g-3 container">
+    <div class="col">
+        <input type="text" class="form-control" name="name" id="inputPassword2" placeholder="Enter Category Name">
+    </div>
+    <div class="col">
+        <button type="submit" class="btn btn-success mb-3">Add Category</button>
+    </div>
+</form> 
+
+<div id="message-div" class="col-12">
+    <% if (exist) { %>
+        <div style="color: rgb(255, 2, 2);">
+            <p>Catagory have Allredy Exists</p>
+        </div>
+    <% } %>
+    <% if (added) { %>
+        <div style="color: rgb(5, 243, 69);">
+            <p>Catagory has Adede</p>
+        </div>
+    <% } %>
+</div>
+
+<script>
+    var toast = document.getElementById("message-div");
+    var messageOne = "<%= exist %>";
+    var messageTwo = "<%= added %>"; 
+    
+    if (messageOne) {
+        setTimeout(function () {
+            toast.innerText = '';
+        }, 3000);
+    } else if (messageTwo) {
+        setTimeout(function () {
+            toast.innerText = '';
+        }, 3000);
+    }
+</script>
+
+
+<div class="col-12 container">
+    <div class="bg-light rounded h-100 p-4">
+        <div class="table-responsive">
+            <table class="table  table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Category Name</th>
+                        <th scope="col"class="text-center">Delete</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <% category.forEach(function(item,i) {%>
+                <tr>
+                    <td><%=i+1%></td>
+                    <td><%=item.name%></td>
+                    <td class="text-center"><a href="/admin/deletecatagory/<%=item._id%>"><i class="fas fa-trash-alt"></i></a></td>          
+                    <% if(item.status){%>
+                     <td><a href="/admin/unlistcatagory/<%=item._id%>"><button class="btn btn-success">List</button></a></td>
+                     <%}else {%>
+                      <td><a href="/admin/listcatagory/<%= item._id %>"><button class="btn btn-danger">Unlist</button></a></td>
+                      <%}%>
+                </tr>
+                <% }) %>
+                </tbody>
+                </table>
+                </div>
+                </div>
+                </div>
+                <script>
+                    var mylink=document.getElementById("category")
+                    mylink.classList.add("active")
+                  </script>
+            <br>
+<a href="/admin/home" class="btn btn-primary mx-3">Back to Home</a>
+</div>
+</section>
+

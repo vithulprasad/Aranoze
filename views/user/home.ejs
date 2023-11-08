@@ -1,0 +1,200 @@
+
+
+<section class="banner_part">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div class="banner_slider owl-carousel">
+                    <% bannerdata.forEach(banner => { %>
+                    <div class="single_banner_slider">
+                        <div class="row">
+                            <div class="col-lg-5 col-md-8">
+                                <div class="banner_text">
+                                    <div class="banner_text_iner">
+                                        <h1><%= banner.bannername %></h1>
+                                        <h5><%= banner.tittle %></h5>
+                                        <p><%= banner.description %></p>
+                                        <a href="pagination" class="btn_2">buy now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="banner_img col-lg-7 col-md-4 d-none d-lg-block">
+                                <img src="/admin/img/<%= banner.image %>" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- product_list start-->
+<section class="product_list section_padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section_tittle text-center">
+                    <h2><span>shop</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="product_list_slider owl-carousel">
+                    <div class="single_product_list_slider">
+                        <div class="row align-items-center justify-content-between">
+                            <% product.forEach(element => { %>
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="single_product_item">
+                                        <a href="/singleproduct?id=<%=element._id %>">
+                                            <img src="/admin/img/<%= element.image[0] %>" alt="productImage">
+                                        </a>
+                                        <div class="single_product_text">
+                                            <h4>Product Name: <%=element.name%></h4>
+                                            <h3>Category:<%=element.category %></h3>
+                                            <h3>Price: <%=element.price %></h3>
+                                            
+                                            <a onclick="addcart('<%= element._id %>')" class="add_cart">+ add to cart</a><a  class="add_cart" onclick="addwhish('<%= element._id %>')"><i class="ti-heart active"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+
+                                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+  function addcart(productid) {
+    $.ajax({
+      url: '/addtocart?id='+productid,
+      method: 'GET',
+      success: function (response) {
+       
+        if (response.status === true) {
+          
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'success',
+            title: 'Added to Cart'
+            })
+        } 
+        else if(response.status === false && response.message=='Out of stock!'){
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'error',
+            title: 'Out of stock!!'
+            })  
+        }
+        else  {
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'error',
+            title: 'You already added this product'
+            }) 
+
+        }
+      },
+      error: function(xhr, status, error) {
+    // Code to handle the error response
+    console.log(error);
+  }
+    });
+  }
+</script>
+
+<Script>
+   const addwhish=(productid)=>{
+    $.ajax({
+      url: '/wishadd?id='+productid,
+      method: 'GET',
+      success: function (response) {
+        if (response.status === true) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'success',
+            title: 'Added to wishlist'
+            })
+      }
+       else {
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'error',
+            title: 'You already added this product'
+            }) 
+
+        }
+      },
+      error: function(xhr, status, error) {
+    // Code to handle the error response
+    console.log(error);
+  }
+    });
+   }
+</Script>

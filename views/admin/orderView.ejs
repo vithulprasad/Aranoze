@@ -1,0 +1,203 @@
+<div class="container border pt-5 mt-2">
+    <div class="d-flex justify-content-end">
+        <a href="/admin/orders" style="margin-right: 5px;"><button class="btn btn-dark">Back to My orders</button></a>
+        <a href="/admin/home" ><button class="btn btn-dark" style="margin-right: 5px;">Back to Home</button></a>
+         <button onclick="printDiv('printMe')" class="btn btn-dark">Print Invoice</button>
+        </div>
+
+
+
+    
+<div class="container  mb-5 d-none  d-print-none">
+
+
+    <div class="d-flex justify-content-center row " id='printMe'>
+        <div class="col-md-10">
+            <div class="receipt bg-white p-3">
+                <h2 style="font-weight: 900;">Arnoz</h2>
+                <h4 class="mt-2 mb-3">Your order is confirmed!</h4>
+                <!-- <h6 class="name">Hello < %=userdata.firstName%>,</h6><span class="fs-12 text-black-50">your order has been confirmed -->
+                    and
+                    will be shipped in two days</span>
+                <hr>
+                <div class="d-flex flex-row justify-content-between  order-details" >
+                    <div><span class="d-block fs-12">Order date</span><span class="font-weight-bold"><%=orderdata.date.toLocaleString() %></span></div>
+                    <div><span class="d-block fs-12">Order number</span><span
+                            class="font-weight-bold"><%=orderdata._id%></span>
+                    </div>
+                    <div><span class="d-block fs-12">Payment method</span><span
+                            class="font-weight-bold"><% orderdata.paymentType%>
+                        </span></div>
+                    <div><span class="d-block fs-12">Shipping Address</span><span
+                        <% orderdata.address.forEach(element => {%>
+                            
+                       
+                            class="font-weight-bold "><%=element.address%></span><br>
+                        <span class="font-weight-bold "><%=element.city%></span>
+                        <span class="font-weight-bold "><%=element.state%></span><br>
+                        <span class="font-weight-bold "><%=element.pin%></span><br>
+                        <span class="font-weight-bold">MOB:</span>
+                        <span class="font-weight-bold "><%=element.mob%></span>
+                  <%  }); %>
+                    </div>
+                </div>
+                <hr>
+                <% orderdata.item.forEach(product => { %>
+                    <div class="d-flex justify-content-between align-items-center product-details">
+                      <div class="d-flex flex-row product-name-image">
+                        <img class="rounded" src="/admin/img/<%= product.product.image[0] %>" width="80">
+                        <div class="d-flex flex-column justify-content-between ml-2">
+                          <div>
+                            <span class="d-block font-weight-bold p-name"><%=product.product.name %></span>
+                            <!-- <span class="fs-12">< %= product.productId.bname %></span> -->
+                          </div>
+                          <span class="fs-12">Qty: <%=product.quantity %> pcs</span>
+                          <span class="fs-12">price <%=product.price %> pcs</span>
+
+                        </div>
+                      </div>
+                      <div class="product-price">
+                        <h5>$<%=product.totalprice %></h5>
+                      </div>
+                    </div>
+                    <hr>
+                  <% }) %>
+                  
+               
+                <div class="mt-5 amount row">
+                    <div class="d-flex justify-content-center col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="billing">
+                             <div class="d-flex justify-content-between"><span>Subtotal</span><span
+                                    class="font-weight-bold"><%=orderdata.totalAmount%></span></div> 
+                            <div class="d-flex justify-content-between mt-2"><span>Shipping fee</span><span
+                                    class="font-weight-bold">$0</span></div>
+                            <div class="d-flex justify-content-between mt-2"><span>Tax</span><span
+                                    class="font-weight-bold">$0</span></div>
+                            <div class="d-flex justify-content-between mt-2"><span
+                                    class="text-success">Discount</span><span
+                                    class="font-weight-bold text-success">$</span></div>
+                            <hr>
+                            <div class="d-flex justify-content-between mt-1"><span
+                                    class="font-weight-bold">Total</span><span
+                                    class="font-weight-bold text-success">$<%=orderdata.totalAmount%></span></div>
+                        </div>
+                    </div>
+
+                <span class="d-block">Expected delivery date</span><span class="font-weight-bold text-success">12
+                    july 2023</span> 
+
+                </div><span class="d-block mt-3 text-black-50 fs-15">We will be sending a shipping
+                    confirmation email when the item is shipped!</span>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center footer">
+                    <div class="thanks"><span class="d-block font-weight-bold">Thanks for shopping</span><span>Minishop
+                            team</span></div>
+                    <div class="d-flex flex-column justify-content-end align-items-end"><span
+                            class="d-block font-weight-bold">Need Help?</span><span>Call - 974493933</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+
+    }
+</script>
+
+
+
+
+<div class="container">
+<div class="d-flex flex-row justify-content-between  order-details p-3">
+    <div><span class="d-block fs-12">Order date</span><span class="font-weight-bold"><%=orderdata.date.toLocaleString()%></span></div>
+    <div><span class="d-block fs-12">Order number</span><span class="font-weight-bold"><%=orderdata._id %></span>
+    </div>
+    <div><span class="d-block fs-12">Payment method</span><span class="font-weight-bold"><%=orderdata.paymentType %>
+        </span></div>
+    
+    <div><span class="d-block fs-12">Order status</span><span class="font-weight-bold"><%=orderdata.orderStatus%>
+        </span>
+        
+
+
+    </div>
+    
+    <div><span class="d-block fs-12">Shipping Address</span><span
+        <% orderdata.address.forEach(element => {%>
+            
+       
+            class="font-weight-bold "><%=element.address %></span><br>
+        <span class="font-weight-bold "><%=element.city %></span>
+        <span class="font-weight-bold "><%=element.state %></span><br>
+        <span class="font-weight-bold "><%=element.pin %></span><br>
+        <span class="font-weight-bold">MOB:</span>
+        <span class="font-weight-bold "><%=element.mob%></span>
+   <% }); %>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+
+
+<div class="container mt-5">
+    <div class="table-responsive">
+        <table class="table" style="border: 1px solid rgb(106, 10, 10);background-color: rgb(162, 238, 240);">
+
+            <thead class="align-middle">
+                <tr>
+                    <th scope="col"style="font-weight: bold;">Image</th>
+                    <th scope="col"style="font-weight: bold;">Product Name</th>
+                    <th scope="col"style="font-weight: bold;">Category</th>
+                    <th scope="col"style="font-weight: bold;">Quantity</th>
+                    <th scope="col"style="font-weight: bold;">TotalPrice</th>
+
+
+
+                </tr>
+            </thead>
+            <tbody class="align-middle">
+                <% orderdata.item.forEach(product => { %>
+                <tr>
+                    <td>  <img class="rounded" src="/admin/img/<%= product.product.image[0] %>" width="80"></td>
+                    <td><%=product.product.name %></td>
+                    <td><%=product.product.category %></td>
+                    <td><%=product.quantity%></td>
+                    <td><%=product.product.price %></td>
+                    
+                </tr>
+                <% }) %>
+
+            </tbody>
+
+        </table>
+         <div class="w-90 d-flex justify-content-end">
+            <div class="" style="margin-right: 6rem;">
+                <span class="" style="font-weight: 600; font-size: 20px;">Discount :</span>
+                <span class="" style="font-weight: 600; font-size: 20px;"><%=orderdata.discount%></span>
+            </div>
+        </div>
+        
+        <div class="w-90 d-flex justify-content-end">
+            <div class="" style="margin-right: 6rem;">
+                <span class="" style="font-weight: 600; font-size: 20px;">Total :</span>
+                <span class="" style="font-weight: 600; font-size: 20px;"><%=orderdata.totalAmount%></span>
+            </div>
+        </div>
+    </div>
+
+    </div>

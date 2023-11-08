@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="col pt-4">
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link px-0" href="#AddProducts" data-bs-toggle="tab" role="tab">
+          <h1>Edit Products</h1>
+          <div class="d-lg-none text-center">
+            <i class="ci-bell opacity-60 d-block fs-xl mb-2"></i>
+            <span class="fs-ms">Edit Products</span>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <div class="container-fluid">
+      <form action="/admin/editProduct" method="post" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-sm-6">
+            <label class="form-label" for="dashboard-fn">Product Name</label>
+            <input class="form-control" name="id" type="hidden" value="<%=productdata._id%>" id="dashboard-fn">
+            <input class="form-control" name="name" type="text" value="<%=productdata.name%>" id="dashboard-fn" placeholder="Enter Product Name">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="dashboard-ln">Description</label>
+            <input class="form-control" name="description" type="text" value="<%=productdata.description%>" id="dashboard-ln" placeholder="Enter Description">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="dashboard-ln">Price</label>
+            <input class="form-control" name="price" type="text" value="<%=productdata.price%>" id="dashboard-ln" placeholder="Enter Price">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="dashboard-profile-name">Stock</label>
+            <input class="form-control" name="stock" type="text" id="dashboard-profile-name" value="<%=productdata.stock%>" placeholder="Enter Stock details">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="dashboard-country">Category</label>
+            <select name="category" class="form-select form-control" id="dashboard-country">
+              <option value="<%=productdata.category%>" selected><%=productdata.category%></option>
+              <%catagorydata.forEach(function(catdata, i){%>
+              <option value="<%=catdata.name%>"><%=catdata.name%></option>
+              <%})%>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="dashboard-country">Status</label>
+            <select name="editStatus" class="form-select form-control" id="dashboard-country">
+              <option value="<%=productdata.status%>"><%=productdata.status%></option>
+              <option value="Active">Active</option>
+              <option value="Disable">Disable</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <%productdata.image.forEach((element, i) => {%>
+            <img src="/admin/img/<%=productdata.image[i]%>" id="imgView<%=i%>" style="width: 120px; height: auto; padding-top: 5px;">
+            <a href="/admin/removeImg/?proid=<%=productdata._id%>&imageId=<%=productdata.image[i]%>">
+             remove
+            </a>
+            <%});  %>
+            <br>
+            <label class="form-label" for="dashboard-profile-name">Image</label><br>
+            <label style="color: red; font-size: 12px;">Please select a minimum of 4 and a maximum of 4 images</label>
+            <input class="form-control" name="proImage" multiple type="file" id="dashboard-profile-name" value="<%=productdata.image[0]%>" placeholder="Enter Stock details" onchange="viewImage(event)">
+          </div>
+          <div class="col-12">
+            <hr class="mt-2 mb-4">
+            <div class="d-sm-flex justify-content-end align-items-center">
+              <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    function viewImage(event) {
+      const imageCount = event.target.files.length;
+      for (let i = 0; i < imageCount; i++) {
+        const imgView = document.getElementById("imgView" + i);
+        if (imgView) {
+          imgView.src = URL.createObjectURL(event.target.files[i]);
+        }
+      }
+    }
+  </script>
+</div>

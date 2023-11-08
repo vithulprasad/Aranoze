@@ -1,0 +1,294 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+
+<div class="container-xl px-4 mt-5"style='padding-top: 57px;'>
+    <hr class="mt-0 mb-4">
+    <div class="row mt-5">
+        <div class="col-xl-4  d-flex justify-content-center" style="height: 24rem;">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0 w-50  ">
+                <div class="card-header">Profile Picture</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile  mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png"
+                        alt="" width="100%">
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4"></div>
+                    <!-- Profile picture upload button-->
+                >
+
+                </div>
+
+            </div>
+            <div class="card mb-4 mb-xl-0 w-50  " style="height:24rem;">
+                <div class="">
+                    <div class="text-center card-header">Wallet Amount</div>
+                    <div class="text-center d-flex justify-content-center mt-3 "><span class="mr-2"
+                            style="font-weight: bold; color: rgb(10, 209, 13);">$</span><span><%=userdata.walletAmount  %></span>
+                    </div>
+
+                    <div class="d-flex justify-content-center w-100" style="margin-top: 15rem;">
+
+                        <!-- Button trigger modal-->
+
+                       
+
+                        <!-- Modal: modalCart -->
+                        <div class="modal fade" id="modalCart" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <!--Header-->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myModalLabel">Add Money To Wallet</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <!--Body-->
+                                    <div class="modal-body">
+                                        <form id="addmoneyform">
+                                            <!-- Amount input -->
+                                            <div class="form-outline mb-4">
+                                                <input type="number" id="amount" name="amount" class="form-control" />
+                                                <label class="form-label" for="amount">Enter Amount</label>
+                                            </div>
+                                            <!-- Submit button -->
+                                            <button type="submit" class="btn btn-primary btn-block">Add Money</button>
+                                        </form>
+                                    </div>
+                                    <!--Footer-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-primary"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal: modalCart -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+                    <form action="/updatedetails" method="post">
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-6">
+                                <input type="hidden" name="id" value="<%= userdata._id %>">
+
+                              
+                                <label class="small mb-1" for="inputFirstName">First name</label>
+                                <input class="form-control" id="inputFirstName" type="text"
+                                    placeholder="Enter your first name" name="firstName" readonly value="<%=userdata.firstName %>">
+                            </div>
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputLastName">Last name</label>
+                                <input class="form-control" id="inputLastName" type="text"
+                                    placeholder="Enter your last name" name="Lastname" readonly value="<%=userdata.lastName%>">
+                            </div>
+                        </div>
+
+                        <!-- Form Group (username)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputUsername">Email</label>
+                            <input class="form-control" id="inputUsername" disabled type="email"
+                                placeholder="Enter your email" name="email"  value="<%= userdata.email%>">
+                        </div>
+
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPhone">Phone number</label>
+                                <input class="form-control" id="inputPhone" type="tel"
+                                    placeholder="Enter your phone number" name="mobile" readonly value="<%=userdata.mobile  %>">
+                            </div>
+
+                            <!-- Save changes button-->
+                            
+                    </form>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="d-flex flex-row">
+            <div class="me-2">
+                <a href="/myorder">
+                    <button class="bg-warning p-1 rounded mx-3">My Orders</button>
+                  </a>
+                  
+            </div>
+            <div class="d-flex flex-row">
+                <a href="/usercoupon">
+                <button class="bg-warning p-1 rounded mr-3">View Coupons</button>
+                </a>
+            </div>
+
+
+            <!-- Button trigger modal-->
+
+            <button class="bg-warning p-1 rounded" data-toggle="modal" data-target="#modalCart1">view wallet
+                history</button>
+
+
+            <!-- Modal: modalCart -->
+            <div class="modal fade" id="modalCart1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <!--Header-->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Wallet History</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <!--Body-->
+                       
+                            <% userdata.wallethistory.forEach((value)=>{%>
+                                <div class="modal-body b-s"style="margin:10px;border:solid 1px red;">
+                                <h4><%= value.tdate.toLocaleDateString() %></h4>
+
+                                 <h4><%=value.amount%></h4>
+                                 <h4><%=value.sign%></h4>
+                                </div>
+                           <% }) %>
+                        
+                        <div class="modal-body">
+                            <h3>wallet Balance:<%=userdata.walletAmount%></h3>
+                            </div>
+                        <!--Footer-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal: modalCart -->
+
+
+
+        </div>
+    </div>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+
+
+<script>
+
+
+    $(document).ready(function () {
+        $('#addmoneyform').submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            var amount = document.getElementById('amount').value;
+            $.ajax({
+                type: 'POST',
+                url: '/addmoney',
+                data: {
+                    amount
+                },
+                success: function (data) {
+
+                    razorPayment(data)
+
+                },
+                error: function (xhr, textStatus, error) {
+
+                    console.log(xhr.statusText + ': ' + xhr.responseText);
+                }
+            });
+        });
+    });
+
+    function razorPayment(value) {
+        const order = value.razorpayDetails
+        // razor pay
+        var options = {
+            "key": "rzp_test_1qaKi1mXcnedgJ", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Acme Corp", //your business name
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            "handler": function (response) {
+                veryfyPayment(response, order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar", //your customer's name
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+        // razor pay
+    }
+
+    function veryfyPayment(order, payment) {
+
+        $.ajax({
+            url: "/addmoneysuccess",
+            method: "post",
+            data: { order, payment },
+            success: function (response) {
+                if (response.failed) {
+                    swal("Oops!", "something went wrong", "error");
+                } else if (response.addmoney) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Money added to wallet Sucessfully',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload(); // Reload the page
+                        }
+                    });
+                }
+
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+                swal("Error!", "An error occurred.", "error");
+            }
+        });
+
+    }
+
+
+</script>
+<script>
+    $(document).ready(function () {
+        $('#my-orders-btn').click(function () {
+            window.location.href = '/myorder';
+        });
+    });
+
+    $(document).ready(function () {
+        $('#couponss').click(function () {
+            window.location.href = '/userCoupons';
+        });
+    });
+</script>

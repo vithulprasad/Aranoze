@@ -1,0 +1,60 @@
+<div class="text-center py-2">
+    <h3 style="color: black;">PRODUCT MANAGENENT</h3>
+</div>
+
+<div class="col-12">
+     <div class="bg-light rounded h-100 p-4">
+        <div class="d-flex justify-content-end my-3">
+            <a href="/admin/addproduct"><button class="btn btn-success">Add New Product</button></a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="align-middle">
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Delete</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <%product.forEach(function(Product){%>
+                        <tr>
+                            <td><img style="width: 90px;"src="/admin/img/<%= Product.image[0] %>"></td>
+                            <td><%=Product.name%></td>
+                            <td><%=Product.price%></td>
+                            <td><%=Product.stock%></td>
+                            <td><%=Product.category%></td>
+                            <td><%=Product.description%></td>
+                            <td><%=Product.status%></td>
+                            <td><a href="/admin/deleteproduct/<%=Product._id %>"><button class="btn btn-danger"><i class="bi bi-x-circle-fill"></i></button></a></td>
+                            <td><a href="/admin/updateproduct/?id=<%=Product._id%>"><button class="btn btn-primary"> <i class="bi bi-pencil-square"><Em></Em></i></button></a></td>
+                             <td><%if(Product.status === true){%>
+                                    <a href="/admin/listproduct/<%=Product._id%>"><button class="btn btn-success">List</button></a>
+                                    <% }else{ %>
+                                    <a href="/admin/unlistproduct/<%=Product._id%>"><button class="btn btn-danger">Unlist</button></a>
+                                    <% } %>
+                            </td>
+                        </tr>
+
+                    <%})%>
+                    
+
+                </tbody>
+            </table>
+        </div>
+
+     </div>
+
+</div>
+<script>
+    var mylink=document.getElementById("Product")
+    mylink.classList.add("active")
+</script>

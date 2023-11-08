@@ -1,0 +1,244 @@
+<style>
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #ffff;
+  color: #eee;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.center .stars {
+  height: 150px;
+  width: 60px;
+  text-align: center;
+}
+
+.stars input {
+  display: none;
+}
+
+.stars label {
+  float: right;
+  font-size: 50px; /* Decrease the font-size for smaller stars */
+  color: #ffff;
+  margin: 0 5px;
+  text-shadow: 1px 1px #bbb;
+  cursor: pointer;
+}
+
+.stars label:before {
+  content: '★';
+}
+
+.stars input:checked~label {
+  color: gold;
+  text-shadow: 1px 1px #c60;
+}
+
+.stars:not(:checked)>label:hover,
+.stars:not(:checked)>label:hover~label {
+  color: gold;
+}
+
+.stars input:checked>label:hover,
+.stars input:checked>label:hover~label {
+  color: gold;
+  text-shadow: 1px 1px goldenrod;
+}
+
+.stars .result:before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  left: 50%;
+  transform: translateX(-47%);
+  bottom: -30px;
+  font-size: 30px;
+  font-weight: 500;
+  color: gold;
+  font-family: 'Poppins', sans-serif;
+  display: none;
+}
+
+form {
+  width: 500px;
+  margin-top: 20px;
+}
+
+form header {
+  font-size: 25px;
+  color: #fe7;
+  font-weight: 500;
+  margin: 5px 0 2px 0;
+  transition: all 0.2s ease;
+}
+
+form .textarea {
+  height: 100px;
+  /* width: 50%; */
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+form .textarea textarea {
+  height: 100%;
+  width: 100%;
+  outline: none;
+  color: #f0e5e5;
+  border: 1px solid #333;
+  background:rgb(28, 27, 27);
+  padding: 10px;
+  font-size: 17px;
+  resize: none;
+}
+
+form .btn {
+  height: 45px;
+  width: 50%;
+  margin-top: 15px;
+}
+
+form .btn button {
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: #2dd771;
+  color: #0f0f10;
+  font-size: 17px;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+form .btn button:hover {
+  background: #2870b9;
+}
+/* Your existing CSS code remains unchanged */
+
+/* .container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+} */
+
+.stars-textarea {
+  /* display: flex; */
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+</style>
+
+<div style="width: 100vw; height: 100vh; display: flex;justify-content: center; background-color: #ffff ; align-items: center;">
+
+  <div style="background-color: #2fefd2; padding: 10px; border-radius: 10px;">
+    <h1 style="text-align: center;">Write Your Review</h1>
+
+    <form action="#" id="ratingForm">
+      <div class="container" style="display: flex;flex-direction: column;">
+        <div class="stars" style="width: 360px; display: flex;flex-direction: row-reverse;">
+          <input type="name"value='<%=id%>'>
+          <input type="radio" id="five" name="rate" value="5">
+        <label for="five"></label>
+        <input type="radio" id="four" name="rate" value="4">
+        <label for="four"></label>
+        <input type="radio" id="three" name="rate" value="3">
+        <label for="three"></label>
+        <input type="radio" id="two" name="rate" value="2">
+        <label for="two"></label>
+        <input type="radio" id="one" name="rate" value="1">
+        <label for="one"></label>
+      </div>
+      
+      <div class="stars-textarea">
+        <div class="stars">
+          <span class="result" style="color: rgb(7, 7, 7);"></span>
+        </div>
+        <div class="textarea">
+          <textarea id="experienceInput" cols="30" placeholder="Describe your experience"></textarea>
+          <input type="hidden" value="<%=id %>" id="inputID">
+        </div>
+      </div>
+      <div class="btn" style="width: 100%;">
+       <button type="submit">Post</button>
+      </div>
+    </div>
+  </form>
+  
+</div>
+</div>
+
+
+<script>
+  const ratingForm = document.getElementById('ratingForm');
+  const starsInputs = ratingForm.elements['rate'];
+  const resultSpan = document.querySelector('.result');
+  const experienceInput = document.getElementById('experienceInput');
+  const orderId = document.getElementById("inputID")
+
+  ratingForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    // Count the number of stars selected
+    let selectedStars = 0;
+    for (const starInput of starsInputs) {
+      if (starInput.checked) {
+        selectedStars = parseInt(starInput.value);
+        break; // We don't need to continue counting if a star is selected
+      }
+    }
+
+    // Get the message from the input field
+    const experienceMessage = experienceInput.value;
+    const id =orderId.value
+
+    // Display the number of stars and the message in the resultSpan
+    resultSpan.textContent = `You have selected ${selectedStars} star(s). Your message: ${experienceMessage}`;
+    
+   // Create the data object with the required fields
+   const data = {
+      count: selectedStars,
+      message: experienceMessage,
+      orderId:id
+      
+    };
+
+      fetch('/product-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+          window.location.href = data.message;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+  });
+</script>
+
+
+
+
+

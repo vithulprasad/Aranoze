@@ -1,0 +1,138 @@
+<div class="container">
+    <div class="col-12">
+        <div class=" h-100 mt-5 p-2" style="background-color: rgb(216, 251, 245);">
+
+            <h6 class="mb-3 text-center h2 " style="font-weight: 900;color: rgb(100, 2, 20);">Order History</h6>
+            <div class="table-responsive">
+                <table class="table  table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="font-weight: bold;">OrderId</th>
+                            <th scope="col" style="font-weight: bold;">Date</th>
+                            <th scope="col" style="font-weight: bold;">Payment Method</th>
+                            <th scope="col" style="font-weight: bold;">Status</th>
+                            <th scope="col" style="font-weight: bold;">Total Amount</th>
+                            <th scope="col" style="font-weight: bold;">View Details</th>
+                            <th scope="col" style="font-weight: bold;">Status Change</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orders.forEach(order=> { %>
+                            <tr>
+
+                                <td>
+                                    <%=order._id%>
+                                </td>
+                                <td>
+                                    <%=order.date.toLocaleString()%>
+                                </td>
+                                <td>
+                                    <%=order.paymentType%>
+                                </td>
+                                <td>
+                                    <%=order.orderStatus%>
+                                </td>
+                                <td>
+                                    <%=order.totalAmount%>
+                                </td>
+                                 
+                                <td><a href="/admin/ordersDetail/?id=<%=order._id%>"><button
+                                            class="btn btn-success">View</button></a></td>
+
+                                <td>
+
+                                    <%if (order.orderStatus=="Canceled") {%>
+
+                                        <button type="button" class="btn btn-danger">Canceled</button>
+
+                                   <%}else if (order.orderStatus=="Returned") {%>
+
+                                        <button type="button" class="btn btn-danger">Returned</button>
+
+                                   <%}else{ %>
+                                   <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                        id="dropdownMenu2" data-bs-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        <%=order.orderStatus%>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                     <% if (order.orderStatus=="ordered" ) { %>
+                                        <button  onclick="shippedOrder('<%=order._id%>')"class="dropdown-item" type="button">Shipped</button>
+                                        <button onclick="deliverOrder('<%=order._id%>')" class="dropdown-item" type="button">Delivered</button>
+                                        <!-- <button  onclick="delverOrder('returned','< %=order._id%>')"class="dropdown-item" type="button">Confirm Return</button> -->
+
+                                     <%} else if (order.orderStatus=="Shipped") {%>
+                                        <button onclick="deliverOrder('<%=order._id%>')" class="dropdown-item" type="button">Delivered</button>
+                                        <button  onclick="confirmReturned('<%=order._id%>')"class="dropdown-item" type="button">Confirm Return</button>
+
+                                     <%} else if (order.orderStatus=="Delivered") {%>
+                                        <button  onclick="confirmReturned('<%=order._id%>')"class="dropdown-item" type="button">Confirm Return</button>
+
+                                     <%} else if (order.orderStatus=="Return processing") {%>
+                                   
+                                        <button  onclick="confirmReturned('<%=order._id%>')"class="dropdown-item" type="button">Confirm Return</button>
+
+                                     <% }} %>
+                                    
+                                </div>
+                                    
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+
+    // to deliver order
+    function deliverOrder(orderId){
+     console.log(orderId,"ppp");
+        $.ajax({
+            url:'/admin/deliverOrder',
+            method:'post',
+            data:{
+                
+                orderId:orderId
+            }
+        }).then((data)=>{
+            console.log(data)
+            location.reload()
+        })
+    }
+
+
+    function shippedOrder(orderId){
+     $.ajax({
+         url:'/admin/shippedOrder',
+         method:'post',
+         data:{
+             
+             orderId:orderId
+         }
+     }).then((data)=>{
+         console.log(data)
+         location.reload()
+     })
+ }
+
+
+ function confirmReturned(orderId){
+     
+     $.ajax({
+         url:'/admin/confirmReturned',
+         method:'post',
+         data:{
+             orderId:orderId
+         }  
+     }).then((data)=>{
+         location.reload()
+     })
+ }
+
+</script>

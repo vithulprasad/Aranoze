@@ -1,0 +1,154 @@
+<style>
+	/* Custom CSS for button size and hover effect */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.hover-effect:hover {
+  opacity: 0.8;
+}
+
+</style>
+<section class="h-100 gradient-custom">
+	<div class="container py-5 mt-5">
+	  <div class="row d-flex justify-content-center my-4">
+		<div class="col-md-8">
+		  <div class="card mb-4">
+			<div class="card-header py-3">
+			  <h5 class="mb-0">Wish Items</h5>
+			</div>
+			<div class="card-body">
+			  <% wishDatas.forEach((wishdata) => {%>
+			  <div class="row mb-4">
+				<div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+				  <!-- Image -->
+				  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+					<img src="/admin/img/<%=wishdata.productId.image[0] %>" alt="" class="w-100">
+					<a href="#!">
+					  <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+					</a>
+				  </div>
+				  <!-- Image -->
+				</div>
+  
+				<div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+				  <!-- Data -->
+				  <p><strong><%=wishdata.productId.name%></strong></p>
+				  <!-- <td><a href="/admin/deletebanner/?id=< %=banner._id %>"><button class="btn btn-danger"><i class="bi bi-x-circle-fill"></i></button></a></td> -->
+				  <a href="/deletewishlist/?id=<%= wishdata.productId._id %>">
+					<button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Remove item">
+					  <i class="fas fa-trash"></i>
+					</button>
+				  </a>
+				  
+				  <!-- Data -->
+				</div>
+  
+				<div class="col-lg-4 col-md-6">
+				  <!-- Price & Add to Cart Button -->
+				  <div class="d-flex justify-content-between align-items-center">
+					<div>
+					  <p class="text-start text-md-center">
+						<strong><h5>RS:<%=wishdata.productId.price %></h5></strong>
+					  </p>
+					</div>
+					<div>
+						<!-- <a onclick="addcart('< %= element._id %>')" class="add_cart">+ add to cart</a> -->
+						<button onclick="addcart('<%= wishdata.productId._id %>')" class="btn btn-sm btn-danger hover-effect">Add to cart</button>
+
+
+					</div>
+				  </div>
+				  <!-- Price & Add to Cart Button -->
+				</div>
+			  </div>
+			  <!-- Single item -->
+			  <% }) %>
+  
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+  function addcart(productid) {
+    $.ajax({
+      url: '/addtocart?id='+productid,
+      method: 'GET',
+      success: function (response) {
+       
+        if (response.status === true) {
+          
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'success',
+            title: 'Added to Cart'
+            })
+        } 
+        else if(response.status === false && response.message=='Out of stock!'){
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'error',
+            title: 'Out of stock!!'
+            })  
+        }
+        else  {
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'error',
+            title: 'You already added this product'
+            }) 
+
+        }
+      },
+      error: function(xhr, status, error) {
+    // Code to handle the error response
+    console.log(error);
+  }
+    });
+  }
+</script>
+
+  
+
+
+
+  

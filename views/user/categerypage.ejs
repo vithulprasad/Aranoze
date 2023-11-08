@@ -1,0 +1,427 @@
+<style>
+    /* Custom CSS to adjust the size of the input box and icon */
+    /* You can modify the width and height values as needed */
+    #searchId {
+        width: 250px;
+        /* Adjust the width according to your preference */
+        height: 40px;
+        background-color: rgb(246, 251, 253);
+        /* Adjust the height according to your preference */
+        outline: 2px solid rgb(238, 106, 106);
+    }
+
+
+    .fa-search {
+        font-size: 25px;
+        /* Adjust the font size of the icon */
+    }
+    .content-button {
+        /* Adjust the desired height and width for the button */
+        height: 40px;
+        width: 100px;
+        /* Add additional styling as needed */
+        font-size: 20px;
+        background-color: #ffff;
+        color: #0b0a0a;
+        border: none;
+        cursor: pointer;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Add additional styling as needed */
+        margin-top: 0px;
+    }
+</style>
+
+
+
+
+ <section class="cat_product_area section_padding">
+    <div class="container-fluid mt-5 p-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="left_sidebar_area">
+                    <aside class="left_widgets p_filter_widgets">
+                        <div class="l_w_title">
+                            <h3>Product Categories</h3>
+                        </div>
+                        <div class="widgets_inner">
+                            <ul class="list">
+                                <li>
+                                    <button class="content-button"  onclick="category('all')">
+                                        All</button>
+
+                                </li>
+
+                                <% catagory.forEach(element=> {%>
+                                    <li>
+                                        <button class="content-button" onclick="category('<%=element.name%>')">
+                                            <%=element.name%>
+                                        </button>
+
+                                    </li>
+                                    <% }) %>
+                                        
+                            </ul>
+                        </div>
+                    </aside>
+
+
+                    <!-- <aside class="left_widgets p_filter_widgets price_rangs_aside">
+                        <div class="l_w_title">
+                            <h3>Price Filter</h3>
+                        </div>
+                        <div class="widgets_inner">
+                            <div class="range_item">
+                                 <div id="slider-range"></div> 
+                                <input type="text" class="js-range-slider" value="" />
+                                <div class="d-flex">
+                                    <div class="price_text">
+                                        <p>Price :</p>
+                                    </div>
+                                    <div class="price_value d-flex justify-content-center">
+                                        <input type="text" class="js-input-from" id="amount" readonly />
+                                        <span>to</span>
+                                        <input type="text" class="js-input-to" id="amount" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside> -->
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product_top_bar d-flex justify-content-between align-items-center">
+                            <div class="single_product_menu d-flex">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <input type="text" id="searchId" placeholder="Search" oninput="search()">
+                                        <span class="input-group-text" id="inputGroupPrepend">
+                                            <i class="fa fa-search"></i> <!-- Font Awesome search icon -->
+                                        </span>
+                                        <input type="text" id="hiddendata" value="0" hidden>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <script>
+
+                </script>
+                <div class="container mt-5">
+                    <div class="row" id="product-container">
+                        <% result.forEach((product)=> { %>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="single_product_item">
+                                    <a href="/singleproduct?id=<%=product._id %>">
+                                    <img src="/admin/img/<%= product.image[0] %>" alt="productImage"></a>
+                                    
+                                    <div class="single_product_text">
+                                        <h4>
+                                            <%= product.name %>
+                                        </h4>
+                                        <h5>Category:<%= product.category %>
+                                        </h5>
+                                        <h3>RS:<%= product.price %>
+                                        </h3>
+                                        <a onclick="addcart('<%=product._id %>')" class="add_cart">+ add to cart</a><a
+                                            class="add_cart" onclick="addwhish('<%=product._id %>')"><i
+                                                class="ti-heart active"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+
+
+
+                
+                <div class="button-container">
+                    <button type="button" class="btn btn-outline-success" id="button-decrement" onclick="changepage('decrement')" hidden>Previous Page</button>
+                    <button type="button" class="btn btn-outline-success" id="button-increment" onclick="changepage('increment')">Next Page</button>
+                </div>
+            </div>
+            </section>
+           
+
+            <script>
+                function changepage(data) {
+                    const value = document.getElementById("hiddendata").value;
+                    console.log(value, '--------------data');
+                    $.ajax({
+                        url: '/changepagination',
+                        method: 'post',
+                        data: {
+                            type: data,
+                            count: value
+                        }
+                    }).done((response) => {
+                        console.log(response.result.length, '-----------------this is the length-----------------');
+                        if (response.result.length == 6) {
+                            document.getElementById("button-increment").hidden = false
+                        } else {
+                            document.getElementById("button-increment").hidden = true
+                        }
+
+                        if (response.page <= 0) {
+                            document.getElementById('hiddendata').value = 0;
+                            console.log("zero");
+                            document.getElementById("button-decrement").hidden = true
+
+                        } else {
+                            document.getElementById('hiddendata').value = response.page;
+                            document.getElementById("button-decrement").hidden = false
+                        }
+
+                        // Clear the existing products from the container
+                        const productContainer = document.getElementById('product-container');
+                        productContainer.innerHTML = '';
+
+                        // Loop through the products in the response and create product elements
+                        response.result.forEach(product => {
+                            const productDiv = document.createElement('div');
+                            productDiv.classList.add('col-lg-4', 'col-sm-6');
+                            productDiv.innerHTML = `
+                    <div class="single_product_item">
+                        <img src="/admin/img/${product.image[0]}" alt="productImage">
+                        <div class="single_product_text">
+                            <h4>${product.name}</h4>
+                            <h3>$${product.price}</h3>
+                            <a onclick="addcart('${product._id }')"  class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                        </div>
+                    </div>
+                `;
+                            productContainer.appendChild(productDiv);
+                        });
+                    })
+                }
+            </script>
+            <script>
+                const search = () => {
+                    const searchValue = document.getElementById("searchId").value;
+
+                    console.log(searchValue);
+                    $.ajax({
+                        url: '/search',
+                        method: 'post',
+                        data: {
+                            data: searchValue,
+
+                        }
+                    }).then((response) => {
+                        const productContainer = document.getElementById('product-container');
+                        productContainer.innerHTML = '';
+
+                        // Loop through the products in the response and create product elements
+                        response.result.forEach(product => {
+                            const productDiv = document.createElement('div');
+                            productDiv.classList.add('col-lg-4', 'col-sm-6');
+                            productDiv.innerHTML = `
+                    <div class="single_product_item">
+                        <img src="/admin/img/${product.image[0]}" alt="productImage">
+                        <div class="single_product_text">
+                            <h4>${product.name}</h4>
+                            <h3>$${product.price}</h3>
+                            <a href="#" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                        </div>
+                    </div>
+                `;
+                            productContainer.appendChild(productDiv);
+                        });
+                    })
+
+
+                };
+
+            </script>
+
+            <script>
+                const category = (category) => {
+
+                    if (category == "all") {
+                        window.location.reload()
+                    } else {
+                        $.ajax({
+                            url: '/categoryfilter',
+                            method: 'post',
+                            data: {
+                                category
+                            }
+                        }).done((response) => {
+                            if (response.result) {
+                                if (response.result.length == 6) {
+                                    document.getElementById("button-increment").hidden = false
+
+                                } else {
+                                    document.getElementById("button-increment").hidden = true
+
+                                }
+                                console.log(response, '-----------data-------------');
+                                const productContainer = document.getElementById('product-container');
+                                productContainer.innerHTML = '';
+
+                                // Loop through the products in the response and create product elements
+                                response.result.forEach(product => {
+                                    const productDiv = document.createElement('div');
+                                    productDiv.classList.add('col-lg-4', 'col-sm-6');
+                                    productDiv.innerHTML = `
+                    <div class="single_product_item">
+                        <img src="/admin/img/${product.image[0]}" alt="productImage">
+                        <div class="single_product_text">
+                            <h4>${product.name}</h4>
+                            <h3>$${product.price}</h3>
+                            <a href="#" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                        </div>
+                    </div>
+                `;
+                                    productContainer.appendChild(productDiv);
+                                });
+                            } else {
+                                console.error('Response does not contain valid data.');
+                            }
+                        }).fail((xhr, textStatus, error) => {
+                            console.error('Error:', error);
+                        });
+
+                    }
+
+                }
+            </script>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+            <Script>
+                const addwhish = (productid) => {
+                    $.ajax({
+                        url: '/wishadd?id=' + productid,
+                        method: 'GET',
+                        success: function (response) {
+                            if (response.status === true) {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Added to wishlist'
+                                })
+                            }
+                            else {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 4000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: 'You already added this product'
+                                })
+
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Code to handle the error response
+                            console.log(error);
+                        }
+                    });
+                }
+            </Script>
+
+            <script>
+                function addcart(productid) {
+                    console.log(productid,'proiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiid')
+    $.ajax({
+      url: '/addtocart?id='+productid,
+      method: 'GET',
+      success: function (response) {
+       
+        if (response.status === true) {
+          
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'success',
+            title: 'Added to Cart'
+            })
+        } 
+        else if(response.status === false && response.message=='Out of stock!'){
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'error',
+            title: 'Out of stock!!'
+            })  
+        }
+        else  {
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+            
+            Toast.fire({
+            icon: 'error',
+            title: 'You already added this product'
+            }) 
+
+        }
+      },
+      error: function(xhr, status, error) {
+    // Code to handle the error response
+    console.log(error);
+  }
+    });
+  }
+            </script>
+
+

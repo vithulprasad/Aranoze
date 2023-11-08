@@ -1,0 +1,283 @@
+
+
+
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <<div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-secondary navbar-dark">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DarkPan</h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <div class="position-relative">
+                        <img class="rounded-circle" src="/admin/img/eldhose.JPG"" alt="" style="width: 40px; height: 40px;">
+                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="mb-0">Jhon Doe</h6>
+                        <span>Admin</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100">
+                    <!-- <a href="index.html" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a> -->
+                    <a href="/admin/home" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Dashboard</a>
+                    <div class="nav-item">
+                        <a href="/admin/userlist" class="nav-item nav-link"><i class="fa-light fa-address-book"></i>User List</a>
+                    </div>
+                    <a href="/admin/catagory" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Category</a>
+                    <a href="/admin/product" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Products</a>
+                    <a href="/admin/orders" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Orders</a>
+                    <a href="/admin/coupon" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Coupons</a>
+                    <a href="/admin/banner" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Banners</a>
+                    <a href="/admin/sales" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Sales</a>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+          
+            <!-- Navbar End -->
+
+
+            <!-- Sale & Revenue Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-line fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">User Count</p>
+                                <h3 style="color: black;" class="mb-0"><%=countUser %></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Blocked User Count</p>
+                                <h3 style="color: black;" class="mb-0"><%=countBlockedUser  %></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-area fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Total Sales</p>
+                                <h3 style="color: black;"class="mb-0">$<%= totalAmount %></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Total Wallet Amount</p>
+                                <h3 style="color: black;"class="mb-0">$<%= walletTotal %></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-6">
+                        <div id="piechart_3d" class="bg-light rounded h-100 p-4">
+        
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-light rounded h-100 p-4">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Chart End -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+            <script>
+             const cOrdered = '<%= JSON.stringify(cOrdered) %>'
+             const cDelivered = '<%= JSON.stringify(cDelivered) %>'
+              const cShipped = '<%= JSON.stringify(cShipped) %>'
+            const cCancelled = '<%= JSON.stringify(cCancelled) %>'
+               const cReturned = '<%= JSON.stringify(cReturned) %>'
+                var xValues = ["ordered", "Delivered", "Shipped", "Canceled", "Returned"];
+                var yValues = [cOrdered, cDelivered,cShipped,cCancelled,cReturned];
+                var barColors = ["red", "green", "blue", "orange", "brown"];
+                new Chart("myChart", {
+                    type: "bar",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            backgroundColor: barColors,
+                            data: yValues
+                        }]
+                    },
+                    options: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: "ORDER STATUS"
+                        }
+                    }
+                });
+            </script>
+        
+      <!-- Add this line to include Chart.js from a CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Add this wrapper to wait for the DOM to load -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Your Chart.js code here
+        var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+        var yValues = [55, 49, 44, 24, 15];
+        var barColors = [
+            "#b91d47",
+            "#00aba9",
+            "#2b5797",
+            "#e8c3b9",
+            "#1e7145"
+        ];
+
+        new Chart("myChartDoughnut", {
+            type: "doughnut",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "World Wide Wine Production 2018"
+                }
+            }
+        });
+    });
+</script>
+
+        
+          <!-- Assuming you have a link with id="home" somewhere in your HTML -->
+         
+              <a href="#" id="home">Home</a>
+          
+              <div id="piechart_3d" style="width: 400px; height: 300px;"></div>
+          
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    // Wait for the DOM to load before executing the scripts
+    document.addEventListener("DOMContentLoaded", function () {
+        // Fix the "active" class issue (assuming the element with id="home" exists)
+        var mylink = document.getElementById("home");
+        if (mylink) {
+            mylink.classList.add("active");
+        }
+
+        // Replace the placeholders with actual numeric values from your server-side code
+        var cCod =<%=cCod %>
+        var cOnline =<%=cOnline %>
+        var cWallet =<%=cWallet %>
+
+        // Load the Google Charts library and call the drawChart function
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Task', 'Hours per Day'],
+                ['COD', cCod],
+                ['ONLINE', cOnline],
+                ['WALLET', cWallet],
+            ]);
+
+            var options = {
+                title: 'PAYMENT METHOD',
+                is3D: true,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+            chart.draw(data, options);
+        }
+    });
+</script>
+
+          
+
+        
+        
+        
+          
+        <!-- Content End -->
+        
+        
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        </div>
+        </div>
+            <!-- Sale & Revenue End -->
+
+
+            <!-- Sales Chart Start -->
+            <!-- <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h6 class="mb-0">Worldwide Sales</h6>
+                                <a href="">Show All</a>
+                            </div>
+                            <canvas id="worldwide-sales"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h6 class="mb-0">Salse & Revenue</h6>
+                                <a href="">Show All</a>
+                            </div>
+                            <canvas id="salse-revenue"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Sales Chart End -->
+
+
+           
+
+
+            <!-- Widgets Start -->
+           
+            <!-- Widgets End -->
+
+
+           
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+   

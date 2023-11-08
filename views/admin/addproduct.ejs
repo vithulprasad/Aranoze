@@ -1,0 +1,59 @@
+  <section class="container">
+    <div class="row border pb-2 mt-5 justify-content-center">
+      <div class="col-md-6">
+        <h2 class="text-center">ADD Products</h2>
+        <form class="border p-2" action="/admin/addProduct" method="post" enctype="multipart/form-data" style="background-color: rgb(207, 219, 225);">
+       
+
+            <div class="form-group">
+            <label for="inputAddress">Product Name</label>
+            <input type="text" class="form-control" name="name" id="inputAddress" placeholder="Enter Product Name">
+          </div>
+          <div class="form-group">
+            <label for="inputAddress">Description</label>
+            <input type="text" class="form-control" name="description" id="inputAddress" placeholder="Enter Description">
+          </div>
+          <div class="form-group">
+            <label for="inputAddress">Price</label>
+            <input type="number" class="form-control" name="price" id="inputAddress" placeholder="Enter Price">
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputCity">Stock</label>
+              <input type="text" name="stock" class="form-control" id="inputCity"placeholder="Enter Stock">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputState">Category</label>
+              <select name="catagory" class="form-select form-control" id="inputState">
+                <option value>Select Category</option>
+              <%addproduct.forEach(function(catdata,i) {%>
+                <option value="<%=catdata.name%>"><%=catdata.name%></option>
+              <%});%>
+            </select> 
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputCity">Image</label>
+                <input class="form-control" name="proImage" multiple type="file" id="dashboard-profile-name" placeholder="Enter Stock details" required>
+            </div>
+           
+          </div>
+     
+
+          <div class="text-center mt-5">
+            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+          </div>
+           <%if(typeof message !=="undefined"){%>
+          <div class="alert alert-dismissible alert-warning mt-3">
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              <h4 class="alert-heading">! ! ! Oops..</h4>
+              <p class="mb-0"><%=message%></p>
+            </div>
+        <%}%>
+        </form>
+      </div>
+    </div>
+    
+  </section>
+  
